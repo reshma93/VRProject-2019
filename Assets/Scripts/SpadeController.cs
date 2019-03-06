@@ -17,18 +17,29 @@ public class SpadeController : MonoBehaviour
 
     private static HashSet<GameObject> frozenPotSet = new HashSet<GameObject>();
     private bool gameOver = false;
+    private int frozenPotCount = 4;
     // Start is called before the first frame update
     void Start()
     {
         PotController.increaseFrozenPotsCount += IncrementPotCount;
-       // Debug.Log("blah"+GameObject.Find("gover"));
-      //  GameObject.Find("gover").SetActive(false);
+        // Debug.Log("blah"+GameObject.Find("gover"));
+        //  GameObject.Find("gover").SetActive(false);
+        //ScoreController.activatePot += updateFrozenPotCount;
     }
     public static void IncrementPotCount(GameObject pot)
     {
+        Debug.Log("In increment pot count");
          frozenPotSet.Add(pot);
         //Debug.Log("Called from " + pot);
         //Debug.Log("Killed pots - " + frozenPots);
+    }
+
+    public void updateFrozenPotCount(string tag)
+    {
+        if (tag.Equals("pot_8"))
+        {
+            frozenPotCount = 5;
+        }
     }
     private SteamVR_Controller.Device Controller
     {
@@ -45,8 +56,8 @@ public class SpadeController : MonoBehaviour
     {
         if (!gameOver)
         {
-            if(!collidingObject.GetComponent<PotController>().alreadyKilled)
-            {
+            //if(!collidingObject.GetComponent<PotController>().alreadyKilled)
+            //{
                 Transform coins = collidingObject.transform.GetChild(1);
                 int coinType = collidingObject.GetComponent<PotController>().coinType;
                 if ((coinType == 0 && trackedObj.name.Equals("Controller (left)")) || (coinType == 1 && trackedObj.name.Equals("Controller (right)")))
@@ -55,15 +66,16 @@ public class SpadeController : MonoBehaviour
                     collidingObject.GetComponent<PotController>().setInitialStates();
                     increaseScore();
                 }
-            }
+            //}
 
         }
     }
 
     void Update()
     {
-        if (frozenPotSet.Count >= 5)
+        if (frozenPotSet.Count >= 4)
         {
+            Debug.Log("Enter here.....................!!!!");
             stopGame();
             gameOver = true;
             GameObject.Find("gover").GetComponent<TextMeshPro>().text = "GAME OVER";
