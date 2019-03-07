@@ -49,6 +49,7 @@ public class PotController : MonoBehaviour
         //ScoreController.stopLevitate += stopLevitatePot;
         SpadeController.stopGame += finishGame;
         ScoreController.activatePot += activatePot;
+        SpadeController.gameOverEvent += resetGameOverBool;
         transform.gameObject.SetActive(false);
     }
 
@@ -60,6 +61,11 @@ public class PotController : MonoBehaviour
      public void levitatePot()
     {
         levitateFlag = true;
+    }
+
+    public void resetGameOverBool()
+    {
+        gameOver = false;
     }
 
     //public void stopLevitatePot()

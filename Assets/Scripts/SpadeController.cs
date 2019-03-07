@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class SpadeController : MonoBehaviour
 {
@@ -12,12 +13,16 @@ public class SpadeController : MonoBehaviour
     public delegate void IncreaseScore();
     public static event IncreaseScore increaseScore;
 
+    public delegate void GameOverEvent();
+    public static event GameOverEvent gameOverEvent;
+
     public delegate void StopGame();
     public static event StopGame stopGame;
 
     private static HashSet<GameObject> frozenPotSet = new HashSet<GameObject>();
     private bool gameOver = false;
     private int frozenPotCount = 4;
+    private float gameOverTimer;
     // Start is called before the first frame update
     void Start()
     {
@@ -90,6 +95,16 @@ public class SpadeController : MonoBehaviour
             }
         }
       //  Debug.Log("froze " + frozenPots);
+
+        if(gameOver)
+        {
+            gameOverTimer += Time.deltaTime;
+            if(gameOverTimer >= 10)
+            {
+                gameOver = false;
+                SceneManager.LoadScene(1);
+            }
+        }
     }
 
     private void SetCollidingObject(Collider col)
