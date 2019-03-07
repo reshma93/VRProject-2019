@@ -16,6 +16,7 @@ public class LaserPointer : MonoBehaviour
     private Transform laserTransform;
     // 4
     private Vector3 hitPoint;
+    public GameObject instructionsPlane;
     public LayerMask teleportMask;
     void Start()
     {
@@ -49,6 +50,7 @@ public class LaserPointer : MonoBehaviour
                     {
                         //Call instructions
                         Debug.Log("Instructions");
+                        instructionsPlane.gameObject.SetActive(true);
 
                     }
                     if(hit.collider.tag == "Play_Rock")
@@ -57,6 +59,13 @@ public class LaserPointer : MonoBehaviour
                         //Call play scene
                         SceneManager.LoadScene(2);
                     }
+                    if (hit.collider.tag == "Close")
+                    {
+                        Debug.Log("Close");
+                        //Call play scene
+                        //SceneManager.LoadScene(2);
+                    }
+
                 }
                 //if (Controller.GetHairTriggerDown())
                 //{

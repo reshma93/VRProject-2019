@@ -10,6 +10,7 @@ TagManager:
   - pot_4
   - Play_Rock
   - Instructions_Rock
+  - Close
   layers:
   - Default
   - TransparentFX
