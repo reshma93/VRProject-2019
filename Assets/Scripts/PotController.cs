@@ -49,8 +49,10 @@ public class PotController : MonoBehaviour
         //ScoreController.stopLevitate += stopLevitatePot;
         SpadeController.stopGame += finishGame;
         ScoreController.activatePot += activatePot;
-        SpadeController.gameOverEvent += resetGameOverBool;
+        //SpadeController.gameOverEvent += resetGameOverBool;
         transform.gameObject.SetActive(false);
+
+        Debug.Log("Starting Pot Controller");
     }
 
     public void finishGame()

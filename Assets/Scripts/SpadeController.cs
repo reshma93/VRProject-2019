@@ -61,8 +61,8 @@ public class SpadeController : MonoBehaviour
     {
         if (!gameOver)
         {
-            //if(!collidingObject.GetComponent<PotController>().alreadyKilled)
-            //{
+            if (!collidingObject.GetComponent<PotController>().alreadyKilled)
+            {
                 Transform coins = collidingObject.transform.GetChild(1);
                 int coinType = collidingObject.GetComponent<PotController>().coinType;
                 if ((coinType == 0 && trackedObj.name.Equals("Controller (left)")) || (coinType == 1 && trackedObj.name.Equals("Controller (right)")))
@@ -71,7 +71,7 @@ public class SpadeController : MonoBehaviour
                     collidingObject.GetComponent<PotController>().setInitialStates();
                     increaseScore();
                 }
-            //}
+            }
 
         }
     }
@@ -94,17 +94,18 @@ public class SpadeController : MonoBehaviour
                 potClicked();
             }
         }
-      //  Debug.Log("froze " + frozenPots);
+        //  Debug.Log("froze " + frozenPots);
 
-        if(gameOver)
-        {
-            gameOverTimer += Time.deltaTime;
-            if(gameOverTimer >= 10)
-            {
-                gameOver = false;
-                SceneManager.LoadScene(1);
-            }
-        }
+        //if (gameOver)
+        //{
+        //    gameOverTimer += Time.deltaTime;
+        //    if (gameOverTimer >= 10)
+        //    {
+        //        gameOver = false;
+        //        gameOverEvent();
+        //        SceneManager.LoadScene(1);
+        //    }
+        //}
     }
 
     private void SetCollidingObject(Collider col)

@@ -19,6 +19,7 @@ public class ScoreController : MonoBehaviour {
     public int pot12_score = 20;
     public int pot16_score = 40;
 
+    private int score = 0;
     public float startDelay = 10f;
     private float delay=0;
     // Use this for initialization
@@ -26,8 +27,9 @@ public class ScoreController : MonoBehaviour {
         SpadeController.increaseScore += IncrementScore;
         //transform.gameObject.SetActive(false);
         //GameObject.Find("TimerWarning").SetActive(true);
+        score = 0;
     }
-	private int score =0;
+	
     void IncrementScore()
     {
         score++;
@@ -46,7 +48,7 @@ public class ScoreController : MonoBehaviour {
         //{
             if (score == pot4_score)
             {
-                //Debug.Log(GameObject.Find("TimerWarning"));
+                Debug.Log(GameObject.Find("Hellooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo"));
                 //GameObject.Find("TimerWarning").SetActive(false);
                 //transform.gameObject.SetActive(true);
                 activatePot("pot_4");
