@@ -18,10 +18,15 @@ public class ScoreController : MonoBehaviour {
     public int pot8_score = 10;
     public int pot12_score = 20;
     public int pot16_score = 40;
+
+    public float startDelay = 10f;
+    private float delay=0;
     // Use this for initialization
     void Start () {
         SpadeController.increaseScore += IncrementScore;
-	}
+        //transform.gameObject.SetActive(false);
+        //GameObject.Find("TimerWarning").SetActive(true);
+    }
 	private int score =0;
     void IncrementScore()
     {
@@ -35,24 +40,30 @@ public class ScoreController : MonoBehaviour {
             beginLevitate();
         }
 
-        if (score == pot4_score)
-        {
-            activatePot("pot_4");
-        }
+        delay += Time.deltaTime;
+
+        //if(delay>=startDelay)
+        //{
+            if (score == pot4_score)
+            {
+                //Debug.Log(GameObject.Find("TimerWarning"));
+                //GameObject.Find("TimerWarning").SetActive(false);
+                //transform.gameObject.SetActive(true);
+                activatePot("pot_4");
+            }
+        //}
+        
         if (score == pot8_score)
         {
-            activatePot("pot_8");
-            
+            activatePot("pot_8");      
         }
         if (score == pot12_score)
         {
             activatePot("pot_12");
-            
         }
         if (score == pot16_score)
         {
             activatePot("pot_16");
-            
         }
     }
 }

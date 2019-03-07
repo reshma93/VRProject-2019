@@ -3,7 +3,13 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - pot_12
+  - pot_16
+  - pot_8
+  - pot_4
+  - Play_Rock
+  - Instructions_Rock
   layers:
   - Default
   - TransparentFX

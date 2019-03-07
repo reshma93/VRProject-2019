@@ -7,7 +7,7 @@ public class PotController : MonoBehaviour
 
     private float activeTimer;
     private float levitateTimer;
-    private float deadStateTimer = 10;
+    private float deadStateTimer = 15;
     private float levitateDuration = 10;
 
     private bool isPotClicked;

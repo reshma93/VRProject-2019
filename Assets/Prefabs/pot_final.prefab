@@ -41,10 +41,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 564011bd3164a9541be9b56bbcf88457, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  levitateFlag: 0
+  alreadyKilled: 0
+  isPotFrozen: 0
+  coinType: 0
   gold: {fileID: 2100000, guid: fdd2caefedeb55644b81c4d861300701, type: 2}
   silver: {fileID: 2100000, guid: bf1c8998e207f5c4cb1503691c824dee, type: 2}
   frozenMaterial: {fileID: 2100000, guid: c140d6052559b6f499b0a0205e059c88, type: 2}
-  coinType: 0
 --- !u!1001 &1605036922834251823
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -73,7 +73,7 @@ public class SpadeController : MonoBehaviour
 
     void Update()
     {
-        if (frozenPotSet.Count >= 4)
+        if (frozenPotSet.Count >= 5)
         {
             Debug.Log("Enter here.....................!!!!");
             stopGame();
