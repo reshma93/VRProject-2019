@@ -23,6 +23,10 @@ public class SpadeController : MonoBehaviour
     private bool gameOver = false;
     private int frozenPotCount = 4;
     private float gameOverTimer;
+
+    public AudioSource BGM;
+
+    public GameObject gameOverAudio;
     // Start is called before the first frame update
     void Start()
     {
@@ -84,6 +88,9 @@ public class SpadeController : MonoBehaviour
             stopGame();
             gameOver = true;
             GameObject.Find("gover").GetComponent<TextMeshPro>().text = "GAME OVER";
+            BGM.GetComponent<AudioSource>().Stop();
+
+            gameOverAudio.SetActive(true);
         }
         if (Controller.GetHairTriggerDown())
         {
