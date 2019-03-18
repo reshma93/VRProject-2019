@@ -18,6 +18,9 @@ public class LaserPointer : MonoBehaviour
     private Vector3 hitPoint;
     public GameObject instructionsPlane;
     public LayerMask teleportMask;
+
+    public delegate void RestartPot();
+    public static event RestartPot restartPot;
     void Start()
     {
         // 1
@@ -40,28 +43,31 @@ public class LaserPointer : MonoBehaviour
             // 2
             if (Physics.Raycast(trackedObj.transform.position, transform.forward, out hit, 100))
             {
-                Debug.Log("inside");
+                //Debug.Log("inside");
                 hitPoint = hit.point;
                 ShowLaser(hit);
                 if (Controller.GetHairTriggerDown())
                 {
-                    Debug.Log(hit.collider);
+                    //Debug.Log(hit.collider);
                     if (hit.collider.tag == "Instructions_Rock")
                     {
                         //Call instructions
-                        Debug.Log("Instructions");
+                        //Debug.Log("Instructions");
                         instructionsPlane.gameObject.SetActive(true);
 
                     }
                     if(hit.collider.tag == "Play_Rock")
                     {
-                        Debug.Log("PlayRock");
+                        //Debug.Log("PlayRock");
                         //Call play scene
-                        SceneManager.LoadScene(2);
+                        SceneManager.LoadScene(2, LoadSceneMode.Single);
+                        //restartPot();
+                        ScoreController.score = 0;
+                        
                     }
                     if (hit.collider.tag == "Close")
                     {
-                        Debug.Log("Close");
+                        //Debug.Log("Close");
                         //Call play scene
                         //SceneManager.LoadScene(2);
                     }

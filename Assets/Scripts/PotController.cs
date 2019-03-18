@@ -8,7 +8,10 @@ public class PotController : MonoBehaviour
     private float activeTimer;
     private float levitateTimer;
     private float deadStateTimer = 15;
+
     private float levitateDuration = 10;
+    private float levitateSpeed = 0.5f;
+    private float levitateDistance;
 
     private bool isPotClicked;
     private bool isColourSetToRed;
@@ -30,7 +33,7 @@ public class PotController : MonoBehaviour
 
     private Transform coins;
     private Transform pot;
-    
+    private Transform potPrefab;
     private string tag;
 
     public delegate void IncreaseFrozenPotsCount(GameObject pot);
@@ -39,26 +42,41 @@ public class PotController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        ScoreController.activatePot += activatePot;
+        transform.gameObject.SetActive(false);
+       // Debug.Log("Starting Pot Controller");
 
+        potPrefab = transform;
         coins = transform.GetChild(1);
         pot = transform.GetChild(0);
         tag = transform.tag;
         coins.gameObject.SetActive(false);
         setInitialStates();
+
         ScoreController.beginLevitate += levitatePot;
         //ScoreController.stopLevitate += stopLevitatePot;
         SpadeController.stopGame += finishGame;
-        ScoreController.activatePot += activatePot;
-        //SpadeController.gameOverEvent += resetGameOverBool;
-        transform.gameObject.SetActive(false);
+        ScoreController.fastenLevitate += calculateLeviatateSpeed;
 
-        Debug.Log("Starting Pot Controller");
+        gameOver = false;
+
+        levitateDistance = levitateSpeed * levitateDuration;
+        Debug.Log(levitateDistance);
+        //pseudoStart();
+        //LaserPointer.restartPot += pseudoStart;
     }
 
+    void calculateLeviatateSpeed()
+    {
+        levitateSpeed += 0.2f;
+        levitateDuration = levitateDistance / levitateSpeed*Time.deltaTime;
+        
+    }
     public void finishGame()
     {
         gameOver = true;
-       // Debug.Log("Finish game");
+        //transform.gameObject.SetActive(false);
+        // Debug.Log("Finish game");
     }
      public void levitatePot()
     {
@@ -81,8 +99,9 @@ public class PotController : MonoBehaviour
     {
         if(tag.Equals(pot_tag))
         {
-            transform.gameObject.SetActive(true);
-            
+            //Debug.Log("please exist"+ potPrefab);
+            //Debug.Log("transform in pot controller activate " + transform);
+            transform.gameObject.SetActive(true);          
         }
     }
     public void setInitialStates()
@@ -147,11 +166,12 @@ public class PotController : MonoBehaviour
                     coins.gameObject.SetActive(false);
                     pot.GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0).gameObject.GetComponent<Renderer>().sharedMaterial = frozenMaterial;
 
-                    if (!alreadyKilled)
+                    if (!alreadyKilled && transform.gameObject.activeSelf)
                     {
+                        //Debug.Log("froze " + transform.gameObject);
                         increaseFrozenPotsCount(transform.gameObject);
                         alreadyKilled = true;
-                        Debug.Log("froze " + transform.gameObject);
+                        
                     }                   
                 }
             }
@@ -166,14 +186,16 @@ public class PotController : MonoBehaviour
                 }
                 if (up && !down)
                 {
-                    transform.Translate(Vector3.up * 0.5f * Time.deltaTime);
+                    transform.Translate(Vector3.up * levitateSpeed * Time.deltaTime);
                     levitateTimer += Time.deltaTime;
                 }
                 else
                 {
-                    transform.Translate(Vector3.down * 0.5f * Time.deltaTime);
+                    transform.Translate(Vector3.down * levitateSpeed * Time.deltaTime);
                     levitateTimer -= Time.deltaTime;
                 }
+
+
 
             }
         }  

@@ -13,6 +13,9 @@ public class SpadeController : MonoBehaviour
     public delegate void IncreaseScore();
     public static event IncreaseScore increaseScore;
 
+    public delegate void DecreaseScore();
+    public static event DecreaseScore decreaseScore;
+
     public delegate void GameOverEvent();
     public static event GameOverEvent gameOverEvent;
 
@@ -23,6 +26,8 @@ public class SpadeController : MonoBehaviour
     private bool gameOver = false;
     private int frozenPotCount = 4;
     private float gameOverTimer;
+    public GameObject MainMenuButton;
+
 
     public AudioSource BGM;
 
@@ -32,12 +37,12 @@ public class SpadeController : MonoBehaviour
     {
         PotController.increaseFrozenPotsCount += IncrementPotCount;
         // Debug.Log("blah"+GameObject.Find("gover"));
-        //  GameObject.Find("gover").SetActive(false);
-        //ScoreController.activatePot += updateFrozenPotCount;
+        //GameObject.Find("gover").SetActive(false);
+        ScoreController.activatePot += updateFrozenPotCount;
     }
     public static void IncrementPotCount(GameObject pot)
     {
-        Debug.Log("In increment pot count");
+        //Debug.Log("In increment pot count");
          frozenPotSet.Add(pot);
         //Debug.Log("Called from " + pot);
         //Debug.Log("Killed pots - " + frozenPots);
@@ -47,7 +52,9 @@ public class SpadeController : MonoBehaviour
     {
         if (tag.Equals("pot_8"))
         {
+            //Debug.Log(frozenPotCount);
             frozenPotCount = 5;
+            //Debug.Log(frozenPotCount);
         }
     }
     private SteamVR_Controller.Device Controller
@@ -68,29 +75,45 @@ public class SpadeController : MonoBehaviour
             if (!collidingObject.GetComponent<PotController>().alreadyKilled)
             {
                 Transform coins = collidingObject.transform.GetChild(1);
-                int coinType = collidingObject.GetComponent<PotController>().coinType;
-                if ((coinType == 0 && trackedObj.name.Equals("Controller (left)")) || (coinType == 1 && trackedObj.name.Equals("Controller (right)")))
+                if(coins.gameObject.activeSelf)
                 {
-                    coins.gameObject.SetActive(false);
-                    collidingObject.GetComponent<PotController>().setInitialStates();
-                    increaseScore();
+                    int coinType = collidingObject.GetComponent<PotController>().coinType;
+                    if ((coinType == 0 && trackedObj.name.Equals("Controller (left)")) || (coinType == 1 && trackedObj.name.Equals("Controller (right)")))
+                    {
+                        coins.gameObject.SetActive(false);
+                        collidingObject.GetComponent<PotController>().setInitialStates();
+                        increaseScore();
+                    }
+                    else if ((coinType == 1 && trackedObj.name.Equals("Controller (left)")) || (coinType == 0 && trackedObj.name.Equals("Controller (right)")))
+                    {
+                        decreaseScore();
+                    }
                 }
-            }
 
+            }
+        }
+        else
+        {
+            SceneManager.LoadScene(1, LoadSceneMode.Single);
         }
     }
 
     void Update()
     {
-        if (frozenPotSet.Count >= 5)
+
+        //Debug.Log("Spade controller running");
+        //GameObject.Find("gover").SetActive(false);
+        if (frozenPotSet.Count >= frozenPotCount)
         {
-            Debug.Log("Enter here.....................!!!!");
+            //Debug.Log("Enter here.....................!!!!");
             stopGame();
             gameOver = true;
             GameObject.Find("gover").GetComponent<TextMeshPro>().text = "GAME OVER";
             BGM.GetComponent<AudioSource>().Stop();
-
+            MainMenuButton.SetActive(true);
             gameOverAudio.SetActive(true);
+
+           
         }
         if (Controller.GetHairTriggerDown())
         {
