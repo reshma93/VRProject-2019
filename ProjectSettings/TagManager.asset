@@ -11,6 +11,10 @@ TagManager:
   - Play_Rock
   - Instructions_Rock
   - Close
+  - Column1
+  - Column2
+  - Column3
+  - Column4
   layers:
   - Default
   - TransparentFX

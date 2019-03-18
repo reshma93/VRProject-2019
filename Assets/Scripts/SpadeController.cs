@@ -22,8 +22,10 @@ public class SpadeController : MonoBehaviour
     public delegate void StopGame();
     public static event StopGame stopGame;
 
+    private SteamVR_Controller.Device device;
     private static HashSet<GameObject> frozenPotSet = new HashSet<GameObject>();
     private bool gameOver = false;
+    private bool hapticFlag = false;
     private int frozenPotCount = 4;
     private float gameOverTimer;
     public GameObject MainMenuButton;
@@ -82,6 +84,7 @@ public class SpadeController : MonoBehaviour
                     {
                         coins.gameObject.SetActive(false);
                         collidingObject.GetComponent<PotController>().setInitialStates();
+                        Controller.TriggerHapticPulse(1000);
                         increaseScore();
                     }
                     else if ((coinType == 1 && trackedObj.name.Equals("Controller (left)")) || (coinType == 0 && trackedObj.name.Equals("Controller (right)")))
@@ -100,7 +103,7 @@ public class SpadeController : MonoBehaviour
 
     void Update()
     {
-
+        
         //Debug.Log("Spade controller running");
         //GameObject.Find("gover").SetActive(false);
         if (frozenPotSet.Count >= frozenPotCount)
@@ -117,11 +120,18 @@ public class SpadeController : MonoBehaviour
         }
         if (Controller.GetHairTriggerDown())
         {
-          //  Debug.Log("hair trigger got");
+            device = SteamVR_Controller.Input((int)trackedObj.index);
+            //  Debug.Log("hair trigger got");
+
             if (collidingObject)
             {
               //  Debug.Log("inside if");
+              if(hapticFlag)
+                {
+                    device.TriggerHapticPulse(3000);
+                }
                 potClicked();
+
             }
         }
         //  Debug.Log("froze " + frozenPots);
@@ -152,6 +162,8 @@ public class SpadeController : MonoBehaviour
         //Debug.Log("Ontriggerenter");
         SetCollidingObject(other);
 
+        hapticFlag = true;
+
     }
     public void OnTriggerStay(Collider other)
     {
@@ -166,5 +178,6 @@ public class SpadeController : MonoBehaviour
         }
 
         collidingObject = null;
+        hapticFlag = false;
     }
 }

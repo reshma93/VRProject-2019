@@ -97,10 +97,10 @@ public class ScoreController : MonoBehaviour {
         {
             activatePot("pot_16");
         }
-        if(score == 30)
-        {
-            fastenLevitate();
-        }
+        //if(score == 30)
+        //{
+        //    fastenLevitate();
+        //}
         //if ((score - beginLevitateScore) % 30 == 0)
         //{
         //    fastenLevitate();

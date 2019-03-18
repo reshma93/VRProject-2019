@@ -8,6 +8,8 @@ public class PotController : MonoBehaviour
     private float activeTimer;
     private float levitateTimer;
     private float deadStateTimer = 15;
+    private float fastenTimer = 60f;
+    private float groupLevStartTimer = 140f;
 
     private float levitateDuration = 10;
     private float levitateSpeed = 0.5f;
@@ -68,8 +70,10 @@ public class PotController : MonoBehaviour
 
     void calculateLeviatateSpeed()
     {
-        levitateSpeed += 0.2f;
-        levitateDuration = levitateDistance / levitateSpeed*Time.deltaTime;
+        levitateSpeed += 0.3f;
+
+        Debug.Log("LSPEED= "+levitateSpeed);
+        levitateDuration = levitateDistance / levitateSpeed; //*Time.deltaTime;
         
     }
     public void finishGame()
@@ -178,7 +182,7 @@ public class PotController : MonoBehaviour
             //levitate
             if (levitateFlag)
             {
-
+                groupLevStartTimer -= Time.deltaTime;
                 if (levitateTimer >= levitateDuration || levitateTimer <= -5)
                 {
                     up = !up;
@@ -195,6 +199,31 @@ public class PotController : MonoBehaviour
                     levitateTimer -= Time.deltaTime;
                 }
 
+                fastenTimer -= Time.deltaTime;
+
+                if (fastenTimer <= 0)
+                {
+                    fastenTimer = 60f;
+                    calculateLeviatateSpeed();
+                    
+                }
+
+                if(groupLevStartTimer <= 0)
+                {
+                    //flipDirectionFlag();
+                    if(transform.parent.tag.Equals("Column1") || transform.parent.tag.Equals("Column4"))
+                    {
+                        up = true;
+                        down = false;
+                    }
+                    if (transform.parent.tag.Equals("Column2") || transform.parent.tag.Equals("Column3"))
+                    {
+                        up = false;
+                        down = true;
+                    }
+
+                    groupLevStartTimer = 1 / 0f;
+                }
 
 
             }
