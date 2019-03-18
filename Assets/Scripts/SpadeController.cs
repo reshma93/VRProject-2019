@@ -109,7 +109,11 @@ public class SpadeController : MonoBehaviour
         if (frozenPotSet.Count >= frozenPotCount)
         {
             //Debug.Log("Enter here.....................!!!!");
-            stopGame();
+            if(!gameOver && trackedObj.name.Equals("Controller (left)"))
+            {
+                stopGame();
+               
+            }
             gameOver = true;
             GameObject.Find("gover").GetComponent<TextMeshPro>().text = "GAME OVER";
             BGM.GetComponent<AudioSource>().Stop();

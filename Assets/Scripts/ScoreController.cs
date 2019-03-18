@@ -17,7 +17,10 @@ public class ScoreController : MonoBehaviour {
     public delegate void ActivatePot(string pot_tag);
     public static event ActivatePot activatePot;
 
-    
+    public delegate void UpdateLeaderBoard(int score);
+    public static event UpdateLeaderBoard updateLeaderBoard;
+
+
     public int pot4_score = 0;
     public int pot8_score = 30;
     public int pot12_score = 60;
@@ -37,8 +40,13 @@ public class ScoreController : MonoBehaviour {
         SpadeController.increaseScore += IncrementScore;
         SpadeController.decreaseScore += DecrementScore;
         score = 0;
+        SpadeController.stopGame += sendScore;
 
+    }
 
+    void sendScore()
+    {
+        updateLeaderBoard(score);
     }
 
     //void pseudoScoreStart()
