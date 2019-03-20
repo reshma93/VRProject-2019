@@ -85,7 +85,7 @@ public class ScoreController : MonoBehaviour {
             if (score == pot4_score)
             {
                 
-                Debug.Log("4 POT");
+                //Debug.Log("4 POT");
                 //GameObject.Find("TimerWarning").SetActive(false);
                 //transform.gameObject.SetActive(true);
                 activatePot("pot_4");

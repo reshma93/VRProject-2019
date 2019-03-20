@@ -6,6 +6,9 @@ using UnityEngine.SceneManagement;
 
 public class LaserPointer : MonoBehaviour
 {
+
+    public delegate void FetchScores();
+    public static event FetchScores fetchScores;
     // Start is called before the first frame update
     private GameObject collidingObject;
     private SteamVR_TrackedObject trackedObj;
@@ -17,6 +20,7 @@ public class LaserPointer : MonoBehaviour
     // 4
     private Vector3 hitPoint;
     public GameObject instructionsPlane;
+    public GameObject leaderboardPlane;
     public LayerMask teleportMask;
 
     public delegate void RestartPot();
@@ -27,6 +31,7 @@ public class LaserPointer : MonoBehaviour
         laser = Instantiate(laserPrefab);
         // 2
         laserTransform = laser.transform;
+        //leaderboardPlane.gameObject.SetActive(false);
 
     }
 
@@ -53,6 +58,11 @@ public class LaserPointer : MonoBehaviour
                     {
                         //Call instructions
                         //Debug.Log("Instructions");
+                        if (leaderboardPlane.activeSelf)
+                        {
+                            leaderboardPlane.gameObject.SetActive(false);
+                        }
+
                         instructionsPlane.gameObject.SetActive(true);
 
                     }
@@ -64,6 +74,17 @@ public class LaserPointer : MonoBehaviour
                         //restartPot();
                         ScoreController.score = 0;
                         
+                    }
+                    if (hit.collider.tag == "Leaderboard")
+                    {
+                        if(instructionsPlane.activeSelf)
+                        {
+                            instructionsPlane.gameObject.SetActive(false);
+                        }
+                        leaderboardPlane.gameObject.SetActive(true);
+                        fetchScores();
+                        
+
                     }
                     if (hit.collider.tag == "Close")
                     {

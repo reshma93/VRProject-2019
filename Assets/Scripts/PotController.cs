@@ -63,7 +63,7 @@ public class PotController : MonoBehaviour
         gameOver = false;
 
         levitateDistance = levitateSpeed * levitateDuration;
-        Debug.Log(levitateDistance);
+       // Debug.Log(levitateDistance);
         //pseudoStart();
         //LaserPointer.restartPot += pseudoStart;
     }
