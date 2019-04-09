@@ -8,6 +8,8 @@ public class SpadeController : MonoBehaviour
 {
 
     private GameObject collidingObject;
+    private SteamVR_Controller.Device device;
+    private static HashSet<GameObject> frozenPotSet = new HashSet<GameObject>();
     private SteamVR_TrackedObject trackedObj;
 
     public delegate void IncreaseScore();
@@ -22,32 +24,68 @@ public class SpadeController : MonoBehaviour
     public delegate void StopGame();
     public static event StopGame stopGame;
 
-    private SteamVR_Controller.Device device;
-    private static HashSet<GameObject> frozenPotSet = new HashSet<GameObject>();
+    public RuntimeAnimatorController goldAnimate;
+    public RuntimeAnimatorController silverAnimate;
+
     private bool gameOver = false;
     private bool hapticFlag = false;
-    private int frozenPotCount = 4;
-    private float gameOverTimer;
-    public GameObject MainMenuButton;
+    private bool isGold = true;
 
+    private int frozenPotCount = 4;
+    private int numOfClicks_layer = 10;
+    private int currentLayerNumber = 1;
+    private int clickCounter = 0;
+
+    private float gameOverTimer = 2f;
+    private float jackTimer = 4.2f;
+    private float activeTimer = 1f;
+
+    private Animator coins_anim;
+    private Animator wrong_pot_anim;
+    private Animator leftHand_anim;
+    private Animator rightHand_anim;
 
     public AudioSource BGM;
+    private AudioSource collectCoinAudio;
 
     public GameObject gameOverAudio;
+    public GameObject Jack;
+    public GameObject MainMenuButton;
+    private GameObject TreasureChest;
+    private GameObject CameraRigHead;
+    private GameObject Blackout_Camera;
+    private GameObject ScoreTextMesh;
+    private GameObject PotParent;
+    //public GameObject collectCoinAudio;
+
+    private IEnumerator coroutine;
+    private IEnumerator coroutine_pot;
+    private IEnumerator coroutine_collectCoins;
+    private IEnumerator coroutine_handAnim;
+
     // Start is called before the first frame update
     void Start()
     {
         PotController.increaseFrozenPotsCount += IncrementPotCount;
-        // Debug.Log("blah"+GameObject.Find("gover"));
-        //GameObject.Find("gover").SetActive(false);
         ScoreController.activatePot += updateFrozenPotCount;
+
+        leftHand_anim = trackedObj.transform.GetChild(2).GetComponent<Animator>();
+        rightHand_anim = trackedObj.transform.GetChild(2).GetComponent<Animator>();
+
+
+        TreasureChest = GameObject.FindGameObjectWithTag("TreasureChest");
+        ScoreTextMesh = GameObject.FindGameObjectWithTag("WatchTextMesh");
+    
+
+        CameraRigHead = GameObject.FindGameObjectWithTag("MainCamera");
+        Blackout_Camera = GameObject.FindGameObjectWithTag("Blackout_Camera");
+
+
     }
     public static void IncrementPotCount(GameObject pot)
     {
-        //Debug.Log("In increment pot count");
+     
          frozenPotSet.Add(pot);
-        //Debug.Log("Called from " + pot);
-        //Debug.Log("Killed pots - " + frozenPots);
     }
 
     public void updateFrozenPotCount(string tag)
@@ -72,52 +110,188 @@ public class SpadeController : MonoBehaviour
 
     void potClicked()
     {
+        string layerName = "";
+        collectCoinAudio = collidingObject.GetComponent<AudioSource>();
         if (!gameOver)
         {
+            //for (float i = 0; i < 60; i += Time.deltaTime)
+            //{
+            //    //Debug.Log(i);
+            //    device.TriggerHapticPulse(3500);
+            //    // yield return null; //every single frame for the duration of "length" you will vibrate at "strength" amount
+            //}
             if (!collidingObject.GetComponent<PotController>().alreadyKilled)
             {
                 Transform coins = collidingObject.transform.GetChild(1);
                 if(coins.gameObject.activeSelf)
                 {
+
+                    coins_anim = coins.GetComponent<Animator>();
+                    wrong_pot_anim = collidingObject.GetComponent<Animator>();
+                    wrong_pot_anim.Play("NoAnim", 0, 0);
                     int coinType = collidingObject.GetComponent<PotController>().coinType;
                     if ((coinType == 0 && trackedObj.name.Equals("Controller (left)")) || (coinType == 1 && trackedObj.name.Equals("Controller (right)")))
                     {
-                        coins.gameObject.SetActive(false);
+
+                        clickCounter++;
+                        if(clickCounter == numOfClicks_layer)
+                        {
+                            if(isGold)
+                            {
+                                layerName = "Gold_layer_" + currentLayerNumber.ToString();
+                            }
+
+                            else
+                            {
+                                layerName = "Silver_layer_" + currentLayerNumber.ToString();
+                            }
+
+                            TreasureChest.transform.Find(layerName).gameObject.SetActive(true);
+                            //.enable = true;
+                            currentLayerNumber++;
+                            isGold = !isGold;
+                            clickCounter = 0;
+                        }
+
+                        if(trackedObj.name.Equals("Controller (left)"))
+                        {
+                            
+                            //leftHand_anim.enabled = true;
+                            leftHand_anim.Play("Take 01",0,0);
+                            coroutine_handAnim = handAnimDelayTimer(leftHand_anim);
+                            StartCoroutine(coroutine_handAnim);
+
+                        }
+
+                        if (trackedObj.name.Equals("Controller (right)"))
+                        {
+
+                            //rightHand_anim.enabled = true;
+                            rightHand_anim.Play("Take 01", 0, 0);
+                            coroutine_handAnim = handAnimDelayTimer(rightHand_anim);
+                            StartCoroutine(coroutine_handAnim);
+
+                        }
+
+
+
+                        collectCoinAudio.enabled = true;
+                        coroutine_collectCoins = collectCoinsTimer(collectCoinAudio);
+                        StartCoroutine(coroutine_collectCoins);
+
                         collidingObject.GetComponent<PotController>().setInitialStates();
+
+                        if(coinType ==0)
+                        {
+                            //Debug.Log(coins_anim.runtimeAnimatorController);
+                            coins_anim.runtimeAnimatorController = goldAnimate;
+                        }
+                        else
+                        {
+                            //Debug.Log(coins_anim.runtimeAnimatorController);
+                            coins_anim.runtimeAnimatorController = silverAnimate;
+                        }
+
+                        coins_anim.enabled= true;
+                        //Put delayyyyy!
+
+                        coroutine = delayTimer(coins);
+                        StartCoroutine(coroutine);                        
+                        
                         Controller.TriggerHapticPulse(1000);
                         increaseScore();
                     }
                     else if ((coinType == 1 && trackedObj.name.Equals("Controller (left)")) || (coinType == 0 && trackedObj.name.Equals("Controller (right)")))
                     {
+                        // wrong_pot_anim.enabled = true;
+                        Debug.Log("Wrong pot");
+                        wrong_pot_anim.Play("WrongPot", 0, 0);
+                        coroutine_pot = delayTimerForPot(wrong_pot_anim);
+                        StartCoroutine(coroutine_pot);
                         decreaseScore();
                     }
                 }
-
             }
         }
-        else
-        {
-            SceneManager.LoadScene(1, LoadSceneMode.Single);
-        }
+        //else
+        //{
+        //    SceneManager.LoadScene(1, LoadSceneMode.Single);
+        //}
+    }
+    IEnumerator delayTimer(Transform coins)
+    {
+        //print(Time.time);
+        yield return new WaitForSeconds(1f);
+        coins_anim = coins.GetComponent<Animator>();
+        coins.gameObject.SetActive(false);
+        coins_anim.enabled = false;
+        //print(Time.time);
+    }
+    IEnumerator delayTimerForPot(Animator potAnim)
+    {
+        //print(Time.time);
+        yield return new WaitForSeconds(0.5f);
+
+        //potAnim.StopPlayback();
+        //potAnim.enabled = false;
+        //print(Time.time);
     }
 
-    void Update()
+    IEnumerator collectCoinsTimer(AudioSource collectCoins)
+    {
+        //print(Time.time);
+        yield return new WaitForSeconds(0.5f);
+        collectCoins.enabled = false;
+        //print(Time.time);
+    }
+
+   IEnumerator handAnimDelayTimer(Animator hand)
     {
         
-        //Debug.Log("Spade controller running");
-        //GameObject.Find("gover").SetActive(false);
+        yield return new WaitForSeconds(0.25f);
+        hand.StopPlayback();
+        //hand.enabled = false;
+        
+    }
+    void Update()
+    {
+       
+
         if (frozenPotSet.Count >= frozenPotCount)
         {
-            //Debug.Log("Enter here.....................!!!!");
+            
             if(!gameOver && trackedObj.name.Equals("Controller (left)"))
             {
                 stopGame();
                
             }
             gameOver = true;
-            GameObject.Find("gover").GetComponent<TextMeshPro>().text = "GAME OVER";
+           
+
+            Jack.SetActive(true);
+            jackTimer -= Time.deltaTime;
+            if (jackTimer>=0)
+            {
+                Jack.transform.Translate(Vector3.back * 9f * Time.deltaTime);
+            }
+            else
+            {
+                //CameraRigHead.SetActive(false);
+                //Blackout_Camera.SetActive(true);
+                //gameOverTimer -= Time.deltaTime;
+                //if(gameOverTimer <=0 )
+                //{
+                //    SceneManager.LoadScene(1);
+                //}
+                //sSceneManager.LoadScene(0);    
+            }
+                
+            
+
+
+
             BGM.GetComponent<AudioSource>().Stop();
-            MainMenuButton.SetActive(true);
+            //MainMenuButton.SetActive(true);
             gameOverAudio.SetActive(true);
 
            
@@ -130,11 +304,16 @@ public class SpadeController : MonoBehaviour
             if (collidingObject)
             {
               //  Debug.Log("inside if");
-              if(hapticFlag)
-                {
-                    device.TriggerHapticPulse(3000);
-                }
+          
                 potClicked();
+                if (hapticFlag)
+                {
+
+
+                  
+
+                    //hapticFlag = false;
+                }
 
             }
         }
@@ -166,7 +345,7 @@ public class SpadeController : MonoBehaviour
         //Debug.Log("Ontriggerenter");
         SetCollidingObject(other);
 
-        hapticFlag = true;
+        //hapticFlag = true;
 
     }
     public void OnTriggerStay(Collider other)
@@ -182,6 +361,6 @@ public class SpadeController : MonoBehaviour
         }
 
         collidingObject = null;
-        hapticFlag = false;
+        //hapticFlag = false;
     }
 }

@@ -9,10 +9,10 @@ public class PotController : MonoBehaviour
     private float levitateTimer;
     private float deadStateTimer = 15;
     private float fastenTimer = 60f;
-    private float groupLevStartTimer = 140f;
+    private float groupLevStartTimer = 60f;
 
     private float levitateDuration = 10;
-    private float levitateSpeed = 0.5f;
+    private float levitateSpeed = 0.1f;
     private float levitateDistance;
 
     private bool isPotClicked;
@@ -23,6 +23,7 @@ public class PotController : MonoBehaviour
     private bool up = true;
     private bool down = false;
     public bool isPotFrozen = false;
+    private bool scaleFlag = false;
 
     private int coinsColour;
     public int coinType;
@@ -37,6 +38,8 @@ public class PotController : MonoBehaviour
     private Transform pot;
     private Transform potPrefab;
     private string tag;
+
+    private Animator potAnim;
 
     public delegate void IncreaseFrozenPotsCount(GameObject pot);
     public static event IncreaseFrozenPotsCount increaseFrozenPotsCount;
@@ -63,18 +66,23 @@ public class PotController : MonoBehaviour
         gameOver = false;
 
         levitateDistance = levitateSpeed * levitateDuration;
-       // Debug.Log(levitateDistance);
+        // Debug.Log(levitateDistance);
         //pseudoStart();
         //LaserPointer.restartPot += pseudoStart;
+
+        potAnim=transform.GetComponent<Animator>();
+       // potAnim.StopPlayback();
+
     }
 
     void calculateLeviatateSpeed()
     {
-        levitateSpeed += 0.3f;
+        levitateSpeed += 0.05f;
 
         Debug.Log("LSPEED= "+levitateSpeed);
-        levitateDuration = levitateDistance / levitateSpeed; //*Time.deltaTime;
-        
+        levitateDuration = levitateDistance / (levitateSpeed);
+
+        //levitateDuration -= 1; 
     }
     public void finishGame()
     {
@@ -129,6 +137,7 @@ public class PotController : MonoBehaviour
         isPotClicked = false;
         isColourSetToRed = false;
         deadStateTimer = 10;
+        scaleFlag = false;
 
     }
 
@@ -146,20 +155,37 @@ public class PotController : MonoBehaviour
                     layer.GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0).gameObject.GetComponent<Renderer>().sharedMaterial = chosenMaterial;
                     layer.GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(1).gameObject.GetComponent<Renderer>().sharedMaterial = chosenMaterial;
                 }
-
                 isColourSetToRed = true;
-
             }
             if (isColourSetToRed && deadStateTimer > 0)
             {
                 deadStateTimer -= Time.deltaTime;
 
             }
+            if (deadStateTimer <= 6 && deadStateTimer > 0)
+            {
+
+                //Debug.Log("Before scale start", transform);
+                if(!scaleFlag)
+                {
+                    scaleFlag = true;
+                    //Debug.Log("Start scaling", transform);
+                    if (!isPotClicked)
+                    {
+                        potAnim.Play("PotBlink", 0, 0);
+
+                    }
+                }
+
+            }
+
             if (deadStateTimer < 0)
             {
+
+                  
                 if (!isPotClicked)
                 {
-
+                    //potAnim.StopPlayback();
                     //foreach (Transform layer in coins)
                     //{
                     //    layer.GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0).gameObject.GetComponent<Renderer>().sharedMaterial = frozenMaterial;
@@ -167,6 +193,7 @@ public class PotController : MonoBehaviour
                     //    coinType = -1;
 
                     //}
+                    potAnim.Play("NoAnim", 0, 0);
                     coins.gameObject.SetActive(false);
                     pot.GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0).gameObject.GetComponent<Renderer>().sharedMaterial = frozenMaterial;
 

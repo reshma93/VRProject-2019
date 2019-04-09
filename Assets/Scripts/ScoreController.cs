@@ -30,6 +30,8 @@ public class ScoreController : MonoBehaviour {
     public static int score = 0;
     public float startDelay = 10f;
     private float delay=0;
+
+    private GameObject ScoreTextMesh;
     // Use this for initialization
     void Start () {
 
@@ -41,6 +43,9 @@ public class ScoreController : MonoBehaviour {
         SpadeController.decreaseScore += DecrementScore;
         score = 0;
         SpadeController.stopGame += sendScore;
+
+        ScoreTextMesh = GameObject.FindGameObjectWithTag("WatchTextMesh");
+        //Debug.Log("watch score " + ScoreTextMesh);
 
     }
 
@@ -70,8 +75,10 @@ public class ScoreController : MonoBehaviour {
     }
     // Update is called once per frame
     void Update () {
-        transform.gameObject.GetComponent<TextMeshPro>().text = "Score : " + score;
-        if(score>=beginLevitateScore)
+        //transform.gameObject.GetComponent<TextMeshPro>().text = "Score : " + score;
+        //ScoreTextMesh.GetComponent<TextMesh>().text = score.ToString();
+        transform.gameObject.GetComponent<TextMesh>().text = score.ToString();
+        if (score>=beginLevitateScore)
         {
             beginLevitate();
 

@@ -14,7 +14,7 @@ public class LeaderboardWrite : MonoBehaviour
     void updateLeaderboard(int score)
     {
 
-        Debug.Log("come once");
+        //Debug.Log("come once");
         int[] ScoreList = new int[11];
         string[] NameList = new string[11];
         int i = 0;
@@ -31,7 +31,7 @@ public class LeaderboardWrite : MonoBehaviour
                 // the end of the file is reached. 
                 while ((line = sr.ReadLine()) != null)
                 {
-                    Debug.Log(line);
+                    //Debug.Log(line);
                     linePairs = line.Split(' ');
                     ScoreList[i] = Int32.Parse(linePairs[1]);
                     NameList[i] = linePairs[0];

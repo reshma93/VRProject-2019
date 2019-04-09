@@ -17,6 +17,11 @@ TagManager:
   - Column4
   - Leaderboard
   - ScoreTextMesh
+  - Jack
+  - TreasureChest
+  - WatchTextMesh
+  - PotParent
+  - Blackout_Camera
   layers:
   - Default
   - TransparentFX
