@@ -150,11 +150,14 @@ public class PotController : MonoBehaviour
             if (activeTimer < 0 && !isColourSetToRed)
             {
                 coins.gameObject.SetActive(true);
-                foreach (Transform layer in coins)
-                {
-                    layer.GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0).gameObject.GetComponent<Renderer>().sharedMaterial = chosenMaterial;
-                    layer.GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(1).gameObject.GetComponent<Renderer>().sharedMaterial = chosenMaterial;
-                }
+                //foreach (Transform layer in coins)
+                //{
+                //    layer.GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0).gameObject.GetComponent<Renderer>().sharedMaterial = chosenMaterial;
+                //    layer.GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(1).gameObject.GetComponent<Renderer>().sharedMaterial = chosenMaterial;
+                //}
+
+                coins.GetChild(0).gameObject.GetComponent<Renderer>().sharedMaterial = chosenMaterial;
+                coins.GetChild(1).gameObject.GetComponent<Renderer>().sharedMaterial = chosenMaterial;
                 isColourSetToRed = true;
             }
             if (isColourSetToRed && deadStateTimer > 0)

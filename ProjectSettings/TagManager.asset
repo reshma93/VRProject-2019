@@ -22,6 +22,7 @@ TagManager:
   - WatchTextMesh
   - PotParent
   - Blackout_Camera
+  - WrongPotAudio
   layers:
   - Default
   - TransparentFX

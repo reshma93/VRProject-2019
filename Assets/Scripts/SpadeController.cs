@@ -35,6 +35,8 @@ public class SpadeController : MonoBehaviour
     private int numOfClicks_layer = 10;
     private int currentLayerNumber = 1;
     private int clickCounter = 0;
+    private int wrongPotCount = 0;
+    private int wrongPotAudioNumber;
 
     private float gameOverTimer = 2f;
     private float jackTimer = 4.2f;
@@ -47,6 +49,13 @@ public class SpadeController : MonoBehaviour
 
     public AudioSource BGM;
     private AudioSource collectCoinAudio;
+    private AudioSource wrongPotAudio;
+
+    public AudioClip clip1;
+    public AudioClip clip2;
+    public AudioClip clip3;
+    public AudioClip clip4;
+
 
     public GameObject gameOverAudio;
     public GameObject Jack;
@@ -79,6 +88,9 @@ public class SpadeController : MonoBehaviour
 
         CameraRigHead = GameObject.FindGameObjectWithTag("MainCamera");
         Blackout_Camera = GameObject.FindGameObjectWithTag("Blackout_Camera");
+
+        wrongPotAudio = GameObject.FindGameObjectWithTag("WrongPotAudio").GetComponent<AudioSource>();
+
 
 
     }
@@ -209,6 +221,30 @@ public class SpadeController : MonoBehaviour
                         coroutine_pot = delayTimerForPot(wrong_pot_anim);
                         StartCoroutine(coroutine_pot);
                         decreaseScore();
+
+                        wrongPotCount++;
+
+                        if (wrongPotCount % 3 == 0)
+                        {
+                            wrongPotAudioNumber = Random.Range(1, 5);
+                            if (wrongPotAudioNumber == 1)
+                            {
+                                wrongPotAudio.clip = clip1;
+                            }
+                            else if (wrongPotAudioNumber == 2)
+                            {
+                                wrongPotAudio.clip = clip2;
+                            }
+                            else if (wrongPotAudioNumber == 3)
+                            {
+                                wrongPotAudio.clip = clip3;
+                            }
+                            else {
+                                wrongPotAudio.clip = clip4;
+                            }
+
+                            wrongPotAudio.Play();
+                        }
                     }
                 }
             }
