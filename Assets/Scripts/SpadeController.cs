@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.SceneManagement;
-
+using UnityEngine.UI;
 public class SpadeController : MonoBehaviour
 {
 
+    public Image black; 
     private GameObject collidingObject;
     private SteamVR_Controller.Device device;
     private static HashSet<GameObject> frozenPotSet = new HashSet<GameObject>();
@@ -46,6 +47,7 @@ public class SpadeController : MonoBehaviour
     private Animator wrong_pot_anim;
     private Animator leftHand_anim;
     private Animator rightHand_anim;
+    public Animator blackFadeAnim;
 
     public AudioSource BGM;
     private AudioSource collectCoinAudio;
@@ -75,6 +77,7 @@ public class SpadeController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        //check here for which version
         PotController.increaseFrozenPotsCount += IncrementPotCount;
         ScoreController.activatePot += updateFrozenPotCount;
 
@@ -91,7 +94,9 @@ public class SpadeController : MonoBehaviour
 
         wrongPotAudio = GameObject.FindGameObjectWithTag("WrongPotAudio").GetComponent<AudioSource>();
 
+        //blackFadeAnim = GameObject.FindGameObjectWithTag("BlackImg").GetComponent<Animator>();
 
+        
 
     }
     public static void IncrementPotCount(GameObject pot)
@@ -165,25 +170,7 @@ public class SpadeController : MonoBehaviour
                             clickCounter = 0;
                         }
 
-                        if(trackedObj.name.Equals("Controller (left)"))
-                        {
-                            
-                            //leftHand_anim.enabled = true;
-                            leftHand_anim.Play("Take 01",0,0);
-                            coroutine_handAnim = handAnimDelayTimer(leftHand_anim);
-                            StartCoroutine(coroutine_handAnim);
-
-                        }
-
-                        if (trackedObj.name.Equals("Controller (right)"))
-                        {
-
-                            //rightHand_anim.enabled = true;
-                            rightHand_anim.Play("Take 01", 0, 0);
-                            coroutine_handAnim = handAnimDelayTimer(rightHand_anim);
-                            StartCoroutine(coroutine_handAnim);
-
-                        }
+                        
 
 
 
@@ -254,6 +241,13 @@ public class SpadeController : MonoBehaviour
         //    SceneManager.LoadScene(1, LoadSceneMode.Single);
         //}
     }
+    IEnumerator FadeIn()
+    {
+        blackFadeAnim.SetBool("Fade", true);
+        yield return new WaitUntil(() => black.color.a == 1);
+        SceneManager.LoadScene(0);
+    }
+
     IEnumerator delayTimer(Transform coins)
     {
         //print(Time.time);
@@ -312,14 +306,9 @@ public class SpadeController : MonoBehaviour
             }
             else
             {
-                //CameraRigHead.SetActive(false);
-                //Blackout_Camera.SetActive(true);
-                //gameOverTimer -= Time.deltaTime;
-                //if(gameOverTimer <=0 )
-                //{
-                //    SceneManager.LoadScene(1);
-                //}
-                //sSceneManager.LoadScene(0);    
+                //StartCoroutine(FadeIn());
+
+                SceneManager.LoadScene(3);   
             }
                 
             
@@ -334,37 +323,38 @@ public class SpadeController : MonoBehaviour
         }
         if (Controller.GetHairTriggerDown())
         {
-            device = SteamVR_Controller.Input((int)trackedObj.index);
-            //  Debug.Log("hair trigger got");
+            // device = SteamVR_Controller.Input((int)trackedObj.index);
+
+            if (trackedObj.name.Equals("Controller (left)"))
+            {
+
+                //leftHand_anim.enabled = true;
+                leftHand_anim.Play("Take 01", 0, 0);
+                coroutine_handAnim = handAnimDelayTimer(leftHand_anim);
+                StartCoroutine(coroutine_handAnim);
+
+            }
+
+            if (trackedObj.name.Equals("Controller (right)"))
+            {
+
+                //rightHand_anim.enabled = true;
+                rightHand_anim.Play("Take 01", 0, 0);
+                coroutine_handAnim = handAnimDelayTimer(rightHand_anim);
+                StartCoroutine(coroutine_handAnim);
+
+            }
+
 
             if (collidingObject)
             {
               //  Debug.Log("inside if");
           
                 potClicked();
-                if (hapticFlag)
-                {
-
-
-                  
-
-                    //hapticFlag = false;
-                }
-
+               
             }
         }
-        //  Debug.Log("froze " + frozenPots);
-
-        //if (gameOver)
-        //{
-        //    gameOverTimer += Time.deltaTime;
-        //    if (gameOverTimer >= 10)
-        //    {
-        //        gameOver = false;
-        //        gameOverEvent();
-        //        SceneManager.LoadScene(1);
-        //    }
-        //}
+       
     }
 
     private void SetCollidingObject(Collider col)

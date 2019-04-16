@@ -23,6 +23,8 @@ TagManager:
   - PotParent
   - Blackout_Camera
   - WrongPotAudio
+  - BlackImg
+  - KnobLight
   layers:
   - Default
   - TransparentFX
