@@ -32,7 +32,7 @@ public class SpadeController : MonoBehaviour
     private bool hapticFlag = false;
     private bool isGold = true;
 
-    private int frozenPotCount = 4;
+    private int frozenPotCount;
     private int numOfClicks_layer = 10;
     private int currentLayerNumber = 1;
     private int clickCounter = 0;
@@ -74,6 +74,8 @@ public class SpadeController : MonoBehaviour
     private IEnumerator coroutine_collectCoins;
     private IEnumerator coroutine_handAnim;
 
+    AsyncOperation scene;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -96,7 +98,14 @@ public class SpadeController : MonoBehaviour
 
         //blackFadeAnim = GameObject.FindGameObjectWithTag("BlackImg").GetComponent<Animator>();
 
-        
+        frozenPotSet.Clear();
+        frozenPotCount = 4;
+
+        scene = SceneManager.LoadSceneAsync("House", LoadSceneMode.Single);
+        scene.allowSceneActivation = false;
+
+       
+        //Debug.Log("Helloooooooooooooooooooooooooooooooooooooooooo"+GameObject.FindGameObjectsWithTag("pot_4"));
 
     }
     public static void IncrementPotCount(GameObject pot)
@@ -236,10 +245,7 @@ public class SpadeController : MonoBehaviour
                 }
             }
         }
-        //else
-        //{
-        //    SceneManager.LoadScene(1, LoadSceneMode.Single);
-        //}
+
     }
     IEnumerator FadeIn()
     {
@@ -289,8 +295,8 @@ public class SpadeController : MonoBehaviour
 
         if (frozenPotSet.Count >= frozenPotCount)
         {
-            
-            if(!gameOver && trackedObj.name.Equals("Controller (left)"))
+            //&& trackedObj.name.Equals("Controller (left)")
+            if (!gameOver)
             {
                 stopGame();
                
@@ -308,7 +314,8 @@ public class SpadeController : MonoBehaviour
             {
                 //StartCoroutine(FadeIn());
 
-                SceneManager.LoadScene(3);   
+                //SceneManager.LoadScene(3);
+                scene.allowSceneActivation = true;
             }
                 
             

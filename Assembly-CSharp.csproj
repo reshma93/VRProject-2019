@@ -106,6 +106,7 @@
      <Compile Include="Assets\Scripts\ControllerGrabObject.cs" />
      <Compile Include="Assets\Scripts\CubeHitController1.cs" />
      <Compile Include="Assets\Scripts\CubitoHitController.cs" />
+     <Compile Include="Assets\Scripts\DontDestroyPotParent.cs" />
      <Compile Include="Assets\Scripts\FlyObject.cs" />
      <Compile Include="Assets\Scripts\GameController.cs" />
      <Compile Include="Assets\Scripts\GameOverAudio.cs" />

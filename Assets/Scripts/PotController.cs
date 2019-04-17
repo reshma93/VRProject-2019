@@ -33,6 +33,7 @@ public class PotController : MonoBehaviour
     public Material silver;
     private Material chosenMaterial;
     public Material frozenMaterial;
+    public Material originalMaterial;
 
     private Transform coins;
     private Transform pot;
@@ -44,36 +45,48 @@ public class PotController : MonoBehaviour
     public delegate void IncreaseFrozenPotsCount(GameObject pot);
     public static event IncreaseFrozenPotsCount increaseFrozenPotsCount;
 
+    
+
     // Start is called before the first frame update
     void Start()
     {
         ScoreController.activatePot += activatePot;
         transform.gameObject.SetActive(false);
-       // Debug.Log("Starting Pot Controller");
+        Debug.Log("Starting Pot Controller"+transform);
 
         potPrefab = transform;
+        //Debug.Log("Pot Prefab" + potPrefab);
+       
         coins = transform.GetChild(1);
         pot = transform.GetChild(0);
         tag = transform.tag;
         coins.gameObject.SetActive(false);
         setInitialStates();
 
+        //pot.GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetComponent<Renderer>().sharedMaterial = originalMaterial;
+        pot.GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0).gameObject.GetComponent<Renderer>().sharedMaterial = originalMaterial;
+
+
         ScoreController.beginLevitate += levitatePot;
-        //ScoreController.stopLevitate += stopLevitatePot;
         SpadeController.stopGame += finishGame;
         ScoreController.fastenLevitate += calculateLeviatateSpeed;
 
         gameOver = false;
 
         levitateDistance = levitateSpeed * levitateDuration;
-        // Debug.Log(levitateDistance);
-        //pseudoStart();
-        //LaserPointer.restartPot += pseudoStart;
 
+ 
         potAnim=transform.GetComponent<Animator>();
-       // potAnim.StopPlayback();
+
+        GameObject.FindGameObjectWithTag("PotParent").SetActive(true);
+
+        Debug.Log("active " + transform.gameObject.activeSelf);
 
     }
+
+
+
+   
 
     void calculateLeviatateSpeed()
     {
@@ -82,7 +95,7 @@ public class PotController : MonoBehaviour
         Debug.Log("LSPEED= "+levitateSpeed);
         levitateDuration = levitateDistance / (levitateSpeed);
 
-        //levitateDuration -= 1; 
+       
     }
     public void finishGame()
     {
@@ -95,10 +108,10 @@ public class PotController : MonoBehaviour
         levitateFlag = true;
     }
 
-    public void resetGameOverBool()
-    {
-        gameOver = false;
-    }
+    //public void resetGameOverBool()
+    //{
+    //    gameOver = false;
+    //}
 
     //public void stopLevitatePot()
     //{
@@ -111,7 +124,7 @@ public class PotController : MonoBehaviour
     {
         if(tag.Equals(pot_tag))
         {
-            //Debug.Log("please exist"+ potPrefab);
+           // Debug.Log("please exist "+ potPrefab);
             //Debug.Log("transform in pot controller activate " + transform);
             transform.gameObject.SetActive(true);          
         }
@@ -150,11 +163,7 @@ public class PotController : MonoBehaviour
             if (activeTimer < 0 && !isColourSetToRed)
             {
                 coins.gameObject.SetActive(true);
-                //foreach (Transform layer in coins)
-                //{
-                //    layer.GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0).gameObject.GetComponent<Renderer>().sharedMaterial = chosenMaterial;
-                //    layer.GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(1).gameObject.GetComponent<Renderer>().sharedMaterial = chosenMaterial;
-                //}
+
 
                 coins.GetChild(0).gameObject.GetComponent<Renderer>().sharedMaterial = chosenMaterial;
                 coins.GetChild(1).gameObject.GetComponent<Renderer>().sharedMaterial = chosenMaterial;
@@ -188,14 +197,7 @@ public class PotController : MonoBehaviour
                   
                 if (!isPotClicked)
                 {
-                    //potAnim.StopPlayback();
-                    //foreach (Transform layer in coins)
-                    //{
-                    //    layer.GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0).gameObject.GetComponent<Renderer>().sharedMaterial = frozenMaterial;
-                    //    layer.GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(1).gameObject.GetComponent<Renderer>().sharedMaterial = frozenMaterial;
-                    //    coinType = -1;
-
-                    //}
+    
                     potAnim.Play("NoAnim", 0, 0);
                     coins.gameObject.SetActive(false);
                     pot.GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0).gameObject.GetComponent<Renderer>().sharedMaterial = frozenMaterial;
@@ -257,8 +259,15 @@ public class PotController : MonoBehaviour
 
 
             }
-        }  
+        }
+        else
+        {
+            //transform.gameObject.SetActive(false);
+            //Debug.Log("about to destroy " + transform.name);
+            //Destroy(transform.gameObject);
+        }
 
     }
+
 
 }
