@@ -16,14 +16,14 @@ public class HouseController : MonoBehaviour
     private float lightTimer = 0;
     private Animator bookAnim;
 
-    AsyncOperation scene;
+    AsyncOperation scene_1;
     // Start is called before the first frame update
     void Start()
     {
         KnobLight = GameObject.FindGameObjectWithTag("KnobLight");
 
-        //scene = SceneManager.LoadSceneAsync("Demo", LoadSceneMode.Single);
-        //scene.allowSceneActivation = false;
+        //scene_1 = SceneManager.LoadSceneAsync("Demo", LoadSceneMode.Single);
+        //scene_1.allowSceneActivation = false;
     }
 
     private SteamVR_Controller.Device Controller
@@ -65,7 +65,7 @@ public class HouseController : MonoBehaviour
             if(collidingObject.name == "Door")
             {
                 SceneManager.LoadScene(2);
-                //scene.allowSceneActivation = true;
+                //scene_1.allowSceneActivation = true;
             }
         }
             
@@ -77,20 +77,17 @@ public class HouseController : MonoBehaviour
         {
             return;
         }
-         //Debug.Log(col.gameObject + " col.gameObject");
+
         collidingObject = col.gameObject;
     }
     public void OnTriggerEnter(Collider other)
     {
-        //Debug.Log("Ontriggerenter");
         SetCollidingObject(other);
-
         //hapticFlag = true;
 
     }
     public void OnTriggerStay(Collider other)
     {
-        //Debug.Log("set collidingr");
         SetCollidingObject(other);
     }
     public void OnTriggerExit(Collider other)

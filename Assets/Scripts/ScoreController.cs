@@ -32,23 +32,16 @@ public class ScoreController : MonoBehaviour {
     // Use this for initialization
     void Start () {
 
-        //pseudoScoreStart();
-
-        //LaserPointer.restartPot += pseudoScoreStart;
 
         SpadeController.increaseScore += IncrementScore;
         SpadeController.decreaseScore += DecrementScore;
         score = 0;
-        
 
         ScoreTextMesh = GameObject.FindGameObjectWithTag("WatchTextMesh");
-        //Debug.Log("watch score " + ScoreTextMesh);
+
 
     }
 
-
-
-	
     void IncrementScore()
     {
         score+=3;
@@ -60,8 +53,7 @@ public class ScoreController : MonoBehaviour {
     }
     // Update is called once per frame
     void Update () {
-        //transform.gameObject.GetComponent<TextMeshPro>().text = "Score : " + score;
-        //ScoreTextMesh.GetComponent<TextMesh>().text = score.ToString();
+        
         transform.gameObject.GetComponent<TextMesh>().text = score.ToString();
         if (score>=beginLevitateScore)
         {
@@ -75,15 +67,10 @@ public class ScoreController : MonoBehaviour {
         if (score == pot4_score)
         {
                 
-            Debug.Log("4 POT");
+           
 
             //activatePot("pot_4");
-            //Debug.Log(GameObject.FindGameObjectsWithTag("pot_4"));
-            //foreach(GameObject g in GameObject.FindGameObjectsWithTag("pot_4"))
-            //{
-            //    Debug.Log("activating" + g);
-            //    g.SetActive(true);
-            //}
+
 
             GameObject.Find("/Pot_Parent/Column2/pot_final (4)").SetActive(true);
             GameObject.Find("/Pot_Parent/Column3/pot_final (7)").SetActive(true);
@@ -95,7 +82,7 @@ public class ScoreController : MonoBehaviour {
       
         if (score >= pot8_score)
         {
-            Debug.Log("8 POT");
+            
             GameObject.Find("/Pot_Parent/Column1/pot_final (6)").SetActive(true);
             GameObject.Find("/Pot_Parent/Column1/pot_final (8)").SetActive(true);
             GameObject.Find("/Pot_Parent/Column4/pot_final (5)").SetActive(true);
@@ -108,7 +95,7 @@ public class ScoreController : MonoBehaviour {
             GameObject.Find("/Pot_Parent/Column3/pot_final (2)").SetActive(true);
             GameObject.Find("/Pot_Parent/Column2/pot_final (15)").SetActive(true);
             GameObject.Find("/Pot_Parent/Column3/pot_final (13)").SetActive(true);
-            //Debug.Log("12 POT");
+            
             //activatePot("pot_12");
         }
         if (score >= pot16_score)

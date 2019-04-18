@@ -27,7 +27,7 @@ public class PotController : MonoBehaviour
 
     private int coinsColour;
     public int coinType;
-    //private Transform chosenCoins;
+
 
     public Material gold;
     public Material silver;
@@ -55,7 +55,7 @@ public class PotController : MonoBehaviour
         Debug.Log("Starting Pot Controller"+transform);
 
         potPrefab = transform;
-        //Debug.Log("Pot Prefab" + potPrefab);
+       
        
         coins = transform.GetChild(1);
         pot = transform.GetChild(0);
@@ -63,7 +63,7 @@ public class PotController : MonoBehaviour
         coins.gameObject.SetActive(false);
         setInitialStates();
 
-        //pot.GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetComponent<Renderer>().sharedMaterial = originalMaterial;
+       
         pot.GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0).gameObject.GetComponent<Renderer>().sharedMaterial = originalMaterial;
 
 
@@ -101,22 +101,12 @@ public class PotController : MonoBehaviour
     {
         gameOver = true;
         //transform.gameObject.SetActive(false);
-        // Debug.Log("Finish game");
+
     }
      public void levitatePot()
     {
         levitateFlag = true;
     }
-
-    //public void resetGameOverBool()
-    //{
-    //    gameOver = false;
-    //}
-
-    //public void stopLevitatePot()
-    //{
-    //    levitateFlag = false;
-    //}
 
 
 
@@ -124,8 +114,7 @@ public class PotController : MonoBehaviour
     {
         if(tag.Equals(pot_tag))
         {
-           // Debug.Log("please exist "+ potPrefab);
-            //Debug.Log("transform in pot controller activate " + transform);
+          
             transform.gameObject.SetActive(true);          
         }
     }
@@ -133,7 +122,7 @@ public class PotController : MonoBehaviour
     {
 
         activeTimer = Random.Range(2, 11);
-       // Debug.Log("Active Timer:" + activeTimer);
+       
         coinsColour = Random.Range(1, 3);
         if (coinsColour == 1)
         {
@@ -177,11 +166,11 @@ public class PotController : MonoBehaviour
             if (deadStateTimer <= 6 && deadStateTimer > 0)
             {
 
-                //Debug.Log("Before scale start", transform);
+                
                 if(!scaleFlag)
                 {
                     scaleFlag = true;
-                    //Debug.Log("Start scaling", transform);
+                    
                     if (!isPotClicked)
                     {
                         potAnim.Play("PotBlink", 0, 0);
@@ -204,14 +193,14 @@ public class PotController : MonoBehaviour
 
                     if (!alreadyKilled && transform.gameObject.activeSelf)
                     {
-                        //Debug.Log("froze " + transform.gameObject);
+                        
                         increaseFrozenPotsCount(transform.gameObject);
                         alreadyKilled = true;
                         
                     }                   
                 }
             }
-            //levitate
+           
             if (levitateFlag)
             {
                 groupLevStartTimer -= Time.deltaTime;
@@ -242,7 +231,7 @@ public class PotController : MonoBehaviour
 
                 if(groupLevStartTimer <= 0)
                 {
-                    //flipDirectionFlag();
+                    
                     if(transform.parent.tag.Equals("Column1") || transform.parent.tag.Equals("Column4"))
                     {
                         up = true;
@@ -259,12 +248,6 @@ public class PotController : MonoBehaviour
 
 
             }
-        }
-        else
-        {
-            //transform.gameObject.SetActive(false);
-            //Debug.Log("about to destroy " + transform.name);
-            //Destroy(transform.gameObject);
         }
 
     }
